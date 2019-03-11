@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+{% load static %}
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lookafter - Diapers for your needs</title>
+    <link rel="shortcut icon" type="image/png" href="../../static/res/icon16x16.png"/>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T"
+          crossorigin="anonymous">
+</head>
+<body>
+<style>
+    textarea {
+        min-height: 250px;
+    }
+</style>
+<!-- Image and text -->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#!">
+        <img src="../../static/res/icon.png" width="30" height="30" class="d-inline-block align-top" alt="">
+        Lookafter - API
+    </a>
+    <div class="collapse navbar-collapse" id="navbarNavDropdown">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="#pnlLogin">Login</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#pnlGetDiaper">Query</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#pnlPostDiapers">Input</a>
+            </li>
+        </ul>
+    </div>
+    <b id="lbUser">----</b>
+</nav>
+<div id="main-content" class="container">
+    <div class="row">
+        <div id="pnlLogin" class="col-12 mt-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Login API</h5>
+                    <p class="card-text">Simple authentication api.
+                        <br>URL: [ /api/login/ ]
+                        <br>Method: POST
+                        <br>Body: { "username": str, "password": str }
+                        <br>Return: { "token": str , "user":{ "email" : str, "last_login": datetime, "name": str } }
+                    </p>
+                    <p class="card-text">Here is the example. You can try with <a href="../admin">your own user</a> or the default.</p>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1" style="width: 100px;">Username</span>
+                        </div>
+                        <input type="text" id="txtUsername" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1" style="width: 100px;">Password</span>
+                        </div>
+                        <input type="password" id="txtPassword" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                    </div>
+                    <b id="lbNotification" class="mb-3" style="display:none">--</b>
+                    <a href="#!" class="btn btn-primary" onclick="loginRequest()">Custom Login</a>
+                    <a href="#!" class="btn btn-primary" onclick="loginDefaultRequest()">Default Login</a>
+                </div>
+            </div>
+        </div>
+        <div id="pnlGetDiaper" class="col-12 mt-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Query Diaper API</h5>
+                    <p class="card-text"><b>Get Single Detail</b></p>
+                    <p class="card-text">URL: [ /api/diaper/{int:id}/ ]
+                        <br>Method: GET
+                        <br>Return: { "id": int, "name": str, "model": str, "size": str }
+                    </p>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Id</span>
+                        </div>
+                        <input type="text" id="txtGetDiaperId" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Response</span>
+                        </div>
+                        <textarea id="txtGetDiaperIdResponse" class="form-control" aria-label="With textarea" disabled></textarea>
+                    </div>
+
+                    <a href="#!" class="btn btn-primary" onclick="getDiaperDetail('txtGetDiaperIdResponse')">Get details</a>
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><b>Get List Detail</b></p>
+                    <p class="card-text">URL: [ /api/diaper/ ]
+                        <br>Method: GET
+                        <br>Return: { "diapers" : [ diaper ] }
+                    </p>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Response</span>
+                        </div>
+                        <textarea id="txtGetDiapersResponse" class="form-control" aria-label="With textarea" disabled></textarea>
+                    </div>
+
+                    <a href="#!" class="btn btn-primary" onclick="getDiaperList('txtGetDiapersResponse')">Get details</a>
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><b>Get Query Count</b></p>
+                    <p class="card-text">URL: [ /api/diaper/ ]
+                        <br>Method: POST
+                        <br>Body: { "query" : str(model/size), "search" : str)}
+                        <br>Return: { "total": int, "query": int }
+                    </p>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <input type="radio" value="model" name="query-type" aria-label="Radio button for following text input" checked="checked">
+                            </div>
+                        </div>
+                        <input type="text" class="form-control" value="Model " aria-label="Text input with radio button" disabled>
+
+                        <div class="input-group-prepend">
+                            <div class="input-group-text">
+                                <input type="radio" value="size" name="query-type" aria-label="Radio button for following text input">
+                            </div>
+                        </div>
+                        <input type="text" class="form-control" value="Size" aria-label="Text input with radio button" disabled>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Model</span>
+                        </div>
+                        <input type="text" id="txtGetDiaperModel" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputGroupSelect01">Size</label>
+                        </div>
+                        <select class="custom-select" id="inputGetDiaperSize">
+                            <option selected>Choose...</option>
+                            <option value="S">Small</option>
+                            <option value="M">Medium</option>
+                            <option value="L">Large</option>
+                            <option value="XL">Extra Large</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Response</span>
+                        </div>
+                        <textarea id="txtGetDiapersTotalResponse" class="form-control" aria-label="With textarea" disabled></textarea>
+                    </div>
+
+                    <a href="#!" class="btn btn-primary" onclick="getDiaperCount('txtGetDiapersTotalResponse')">Get details</a>
+                </div>
+            </div>
+        </div>
+        <div id="pnlPostDiapers" class="col-12 mt-3">
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Input Diaper API</h5>
+                    <p class="card-text"><b>Insert Diaper</b></p>
+                    <p class="card-text">URL: [ /api/diaper/ ]
+                        <br>Method: PUT
+                        <br>Body: { "name": str, "model": str, "size": str }
+                        <br>Return: { "id": int, "name": str, "model": str, "size": str }
+                    </p>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1" style="width: 80px;">Name</span>
+                        </div>
+                        <input type="text" id="txtNewDiaperName" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1" style="width: 80px;">Model</span>
+                        </div>
+
+                        <input type="text" id="txtNewDiaperModel" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputNewDiaperSize" style="width: 80px;">Size</label>
+                        </div>
+                        <select class="custom-select" id="inputNewDiaperSize">
+                            <option value="S" selected>Small</option>
+                            <option value="M">Medium</option>
+                            <option value="L">Large</option>
+                            <option value="XL">Extra Large</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Response</span>
+                        </div>
+                        <textarea id="txtNewDiaperResponse" class="form-control" aria-label="With textarea" disabled></textarea>
+                    </div>
+
+                    <a href="#!" class="btn btn-primary" onclick="insertDiaper('txtNewDiaperResponse')">Insert diaper</a>
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><b>Update Diaper Detail</b></p>
+                    <p class="card-text">URL: [ /api/diaper/{int:id}/ ]
+                        <br>Method: PUT
+                        <br>Body: { "name": str, "model": str, "size": str }
+                        <br>Return: { "id": int, "name": str, "model": str, "size": str }
+                    </p>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1" style="width: 80px;">Id</span>
+                        </div>
+                        <input type="text" id="txtUpdateDiaperId" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1" style="width: 80px;">Name</span>
+                        </div>
+                        <input type="text" id="txtUpdateDiaperName" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1" style="width: 80px;">Model</span>
+                        </div>
+
+                        <input type="text" id="txtUpdateDiaperModel" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+
+                        <div class="input-group-prepend">
+                            <label class="input-group-text" for="inputUpdateDiaperSize" style="width: 80px;">Size</label>
+                        </div>
+                        <select class="custom-select" id="inputUpdateDiaperSize">
+                            <option value="S" selected>Small</option>
+                            <option value="M">Medium</option>
+                            <option value="L">Large</option>
+                            <option value="XL">Extra Large</option>
+                        </select>
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Response</span>
+                        </div>
+                        <textarea id="txtUpdateDiaperResponse" class="form-control" aria-label="With textarea" disabled></textarea>
+                    </div>
+
+                    <a href="#!" class="btn btn-primary" onclick="updateDiaper('txtUpdateDiaperResponse')">Update diaper</a>
+                </div>
+                <div class="card-body">
+                    <p class="card-text"><b>Remove Diaper</b></p>
+                    <p class="card-text">URL: [ /api/diaper/{int:id}/ ]
+                        <br>Method: DELETE
+                    </p>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Id</span>
+                        </div>
+                        <input type="text" id="txtRemoveDiaperId" class="form-control" placeholder="" aria-label="" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Response</span>
+                        </div>
+                        <textarea id="txtRemoveDiaperResponse" class="form-control" aria-label="With textarea" disabled></textarea>
+                    </div>
+
+                    <a href="#!" class="btn btn-primary" onclick="removeDiaper('txtRemoveDiaperResponse')">Remove diaper</a>
+                </div>
+
+                <div class="card-body">
+                    <p class="card-text"><b>Remove Diapers</b></p>
+                    <p class="card-text">URL: [ /api/diaper/ ]
+                        <br>Method: DELETE
+                        <br>Body: { "diapers":[ int:id ] }
+                    </p>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Ids</span>
+                        </div>
+                        <input type="text" id="txtRemoveDiapersId" class="form-control" placeholder="id1, id2, id3" aria-label="" aria-describedby="basic-addon1">
+                    </div>
+                    <div class="input-group mb-3">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text" id="basic-addon1">Response</span>
+                        </div>
+                        <textarea id="txtRemoveDiapersResponse" class="form-control" aria-label="With textarea" disabled></textarea>
+                    </div>
+
+                    <a href="#!" class="btn btn-primary" onclick="removeDiapers('txtRemoveDiapersResponse')">Remove many</a>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</body>
+
+<!--Bootstrap dependencies-->
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+
+<!--Bootstrap dependencies-->
+<script src="../../static/js/core.js"></script>
+</html>
