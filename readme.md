@@ -34,7 +34,7 @@ Authorization : "Token {token_hash}"
 >URL: [ /api/login/ ] <br>
 Method: POST
 
-#####Body
+##### Body
 ```
 {
 	"username": "admin",
@@ -42,7 +42,7 @@ Method: POST
 }
 ```
 
-#####Response
+##### Response
 ```
 {
   "token": "04bc56e937702182874beab770d5bac470ec0244",
@@ -58,11 +58,11 @@ Method: POST
 >URL: [ /api/auth/ ] <br>
 Method: GET
 
-#####Body
+##### Body
 ```
 ```
 
-#####Response
+##### Response
 ```
 {
   "token": "04bc56e937702182874beab770d5bac470ec0244",
@@ -78,7 +78,7 @@ Method: GET
 >URL: [ /api/diaper/ ] <br>
 Method: PUT
 
-#####Body
+##### Body
 ```
 {
   "name": "Pampers",
@@ -87,7 +87,7 @@ Method: PUT
 }
 ```
 
-#####Response
+##### Response
 ```
 {
   "id": 1,
@@ -101,7 +101,7 @@ Method: PUT
 >URL: [ /api/diaper/< int:pk > ] <br>
 Method: PUT
 
-#####Body
+##### Body
 ```
 {
   "name": "Pampers",
@@ -110,7 +110,7 @@ Method: PUT
 }
 ```
 
-#####Response
+##### Response
 ```
 {
   "id": 1,
@@ -124,11 +124,11 @@ Method: PUT
 >URL: [ /api/diaper/< int:pk > ] <br>
 Method: DELETE
 
-#####Body
+##### Body
 ```
 ```
 
-#####Response
+##### Response
 ```
 {}
 ```
@@ -137,7 +137,7 @@ Method: DELETE
 >URL: [ /api/diaper/ ] <br>
 Method: DELETE
 
-#####Body
+##### Body
 ```
 {
 	"diapers":[
@@ -146,7 +146,7 @@ Method: DELETE
 }
 ```
 
-#####Response
+##### Response
 ```
 {}
 ```
@@ -155,11 +155,11 @@ Method: DELETE
 >URL: [ /api/diaper/< int:pk > ] <br>
 Method: GET
 
-#####Body
+##### Body
 ```
 ```
 
-#####Response
+##### Response
 ```
 {
   "id": 1,
@@ -173,11 +173,11 @@ Method: GET
 >URL: [ /api/diaper/ ] <br>
 Method: GET
 
-#####Body
+##### Body
 ```
 ```
 
-#####Response
+##### Response
 ```
 {
   "diapers": [
@@ -201,7 +201,7 @@ Method: GET
 >URL: [ /api/diaper/ ] <br>
 Method: POST
 
-#####Body
+##### Body
 ```
 {
 	"query" : "model",
@@ -215,7 +215,7 @@ Method: POST
 
 ```
 
-#####Response
+##### Response
 ```
 {
   "total": 5,
